@@ -16,9 +16,7 @@ try {
         switch ($url[0]) {
             case "monsters":
                 $apiController->displayMonsters();
-                if (empty($url[1])) {
-                    // TODO : méthode pour montrer tous les monstres ?
-                } else {
+                if (!empty($url[1])) {
                     // TODO : afficher ici le monstre via l'id stockée dans $url[1]
                 }
                 break;
@@ -38,6 +36,5 @@ try {
         }
     }
 } catch (Exception $e) {
-
-    echo $e->getMessage();
+    $apiController->displayErrors(404);
 }
