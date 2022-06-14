@@ -4,6 +4,9 @@ require_once "models/ApiManager.php";
 class ApiController
 {
     private $apiManager;
+    private $allowedMethods = [
+        "GET"
+    ];
 
     public function __construct()
     {
@@ -13,8 +16,14 @@ class ApiController
 
     public function sendJson($data)
     {
-        $jsonData = json_encode($data);
-        echo $jsonData;
+        $requestMethod = strtoupper($_SERVER["REQUEST_METHOD"]);
+
+        if (in_array($requestMethod, $this->allowedMethods)) {
+            header("Content-Type: application/json; charset=utf-8");
+            echo json_encode($data);
+        } else {
+            http_response_code(405);
+        }
     }
 
     public function displayMonsters()
@@ -24,7 +33,7 @@ class ApiController
         $monsterTab["monsters"] = [];
         foreach ($monsters as $monster) {
 
-            $monstersTab["monsters"][$monster->getId()][] = [
+            $monstersTab["monsters"][$monster->getId()] = [
 
                 "monsters_id" => $monster->getId(),
                 "name" => $monster->getName(),
