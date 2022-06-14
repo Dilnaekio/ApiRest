@@ -1,5 +1,7 @@
 <?php
 require_once "models/Model.php";
+require_once "models/MonsterModel.php";
+
 class ApiManager extends Model
 {
     private $monsters;

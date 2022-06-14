@@ -8,14 +8,13 @@ $apiController = new ApiController;
 try {
     if (isset($_GET['page'])) {
         $url = explode("/", filter_var($_GET['page']), FILTER_SANITIZE_URL);
-        var_dump($url);
     }
     // si GET page est vide on redirige vers l'accueil
     if (empty($url[0])) {
     } else {
         //switch de GET page pour savoir vers quelle page renvoyer l'utilisateur
         switch ($url[0]) {
-            case "Monsters":
+            case "monsters":
                 $apiController->displayMonsters();
                 if (empty($url[1])) {
                     // TODO : méthode pour montrer tous les monstres ?
@@ -23,7 +22,7 @@ try {
                     // TODO : afficher ici le monstre via l'id stockée dans $url[1]
                 }
                 break;
-            case "Scores":
+            case "scores":
                 // TODO : rajouter une condition pour $url[1] via l'id du score
                 if (empty($url[1])) {
                     // TODO : méthode pour montrer tous les scores
@@ -31,7 +30,7 @@ try {
                     // TODO : afficher ici le score lié à l'id stockée dans $url[1]
                 }
                 break;
-            case "Add":
+            case "add":
 
                 break;
             default:

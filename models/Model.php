@@ -7,7 +7,7 @@ abstract class Model
 
     private function setDB()
     {
-        $this->pdo = new PDO('mysql:host=localhost;dbname=apitrest;charset=utf8', "root", "");
+        $this->pdo = new PDO('mysql:host=localhost;dbname=adrar_apirest;charset=utf8', "root", "");
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
 
