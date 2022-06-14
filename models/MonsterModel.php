@@ -1,6 +1,6 @@
 <?php
 
-class Monsters
+class Monster
 {
     private $id;
     private $name;
