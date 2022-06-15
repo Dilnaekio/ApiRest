@@ -37,7 +37,6 @@ class ApiController
         foreach ($monsters as $monster) {
 
             $monstersTab["monsters"][$monster->getId()] = [
-
                 "monsters_id" => $monster->getId(),
                 "name" => $monster->getName(),
                 "atk" => $monster->getAtk(),
@@ -45,11 +44,34 @@ class ApiController
                 "img" => $monster->getImg(),
                 "score" => $monster->getScore(),
                 "role" => $monster->getRole()
-
             ];
         }
 
         $this->sendJson($monstersTab);
+    }
+
+    public function displayMonster($id_monster)
+    {
+        $monster = $this->apiManager->getMonsterById($id_monster);
+
+        if (empty($monster)) {
+            // Je ne sais pas du tout si j'ai utilisé le bon code http ha ha
+            http_response_code(204);
+            $this->displayErrors(204);
+        } else {
+            $monsterJson = [];
+
+            $monsterJson = [
+                "monsters_id" => $monster->getId(),
+                "name" => $monster->getName(),
+                "atk" => $monster->getAtk(),
+                "def" => $monster->getDef(),
+                "img" => $monster->getImg(),
+                "score" => $monster->getScore(),
+                "role" => $monster->getRole()
+            ];
+            $this->sendJson($monsterJson);
+        }
     }
 
     public function displayErrors($code)
@@ -81,7 +103,7 @@ class ApiController
                 echo json_encode(["message" => "Non autorisé"]);
                 break;
             case 402:
-                echo json_encode(["message" => "Non autorisé"]);
+                echo json_encode(["message" => "Paiement requis"]);
                 break;
             case 404:
                 echo json_encode(["message" => "La page est introuvable :'( :'( :'("]);

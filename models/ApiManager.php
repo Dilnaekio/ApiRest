@@ -34,8 +34,9 @@ class ApiManager extends Model
     {
         foreach ($this->monsters as $monster) {
             if ($monster->getId() == $id) {
-                return $monster;
+                $result = $monster;
             }
         }
+        return $result;
     }
 }

@@ -15,9 +15,10 @@ try {
         //switch de GET page pour savoir vers quelle page renvoyer l'utilisateur
         switch ($url[0]) {
             case "monsters":
-                $apiController->displayMonsters();
-                if (!empty($url[1])) {
-                    // TODO : afficher ici le monstre via l'id stockée dans $url[1]
+                if (empty($url[1])) {
+                    $apiController->displayMonsters();
+                } else {
+                    $apiController->displayMonster($url[1]);
                 }
                 break;
             case "scores":
@@ -36,5 +37,6 @@ try {
         }
     }
 } catch (Exception $e) {
+    echo $e->getMessage();
     $apiController->displayErrors(404);
 }
