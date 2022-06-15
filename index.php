@@ -30,7 +30,7 @@ try {
                 }
                 break;
             case "add":
-
+                $apiController->addScore();
                 break;
             default:
                 throw new Exception("La page n'existe pas");

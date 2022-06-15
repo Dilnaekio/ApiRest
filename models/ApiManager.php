@@ -39,4 +39,15 @@ class ApiManager extends Model
         }
         return $result;
     }
+
+    public function addScoreDB($name, $score)
+    {
+        $sql = "INSERT INTO high_score (name, score) VALUES (:name, :score)";
+
+        $req = $this->getDB()->prepare($sql);
+        return $req->execute([
+            ":name" => $name,
+            ":score" => $score
+        ]);
+    }
 }

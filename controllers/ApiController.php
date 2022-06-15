@@ -74,6 +74,15 @@ class ApiController
         }
     }
 
+    public function addScore()
+    {
+        header("Content-Type: application/json; charset=utf-8");
+        $body = file_get_contents("php://input");
+        $object = json_decode($body, true);
+
+        $this->apiManager->addScoreDB($object["name"], $object["score"]);
+    }
+
     public function displayErrors($code)
     {
         header("Content-Type: application/json; charset=utf-8");
