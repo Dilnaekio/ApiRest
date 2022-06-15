@@ -4,9 +4,6 @@ require_once "models/ApiManager.php";
 class ApiController
 {
     private $apiManager;
-    private $allowedMethods = [
-        "GET"
-    ];
 
     public function __construct()
     {
@@ -16,15 +13,13 @@ class ApiController
 
     public function sendJson($data)
     {
-        $requestMethod = strtoupper($_SERVER["REQUEST_METHOD"]);
 
-        if (in_array($requestMethod, $this->allowedMethods)) {
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
             header("Content-Type: application/json; charset=utf-8");
             http_response_code(200);
             echo json_encode($data);
         } else {
             http_response_code(405);
-            // echo json_encode(["message" => "La requête n'est pas autorisée"]);
             $this->displayErrors(405);
         }
     }
@@ -76,11 +71,17 @@ class ApiController
 
     public function addScore()
     {
-        header("Content-Type: application/json; charset=utf-8");
-        $body = file_get_contents("php://input");
-        $object = json_decode($body, true);
 
-        $this->apiManager->addScoreDB($object["name"], $object["score"]);
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            header("Content-Type: application/json; charset=utf-8");
+            $body = file_get_contents("php://input");
+            $object = json_decode($body, true);
+
+            $this->apiManager->addScoreDB($object["name"], $object["score"]);
+        } else {
+            http_response_code(405);
+            $this->displayErrors(405);
+        }
     }
 
     public function displayErrors($code)

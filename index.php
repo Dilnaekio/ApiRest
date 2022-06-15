@@ -16,6 +16,7 @@ try {
         switch ($url[0]) {
             case "monsters":
                 if (empty($url[1])) {
+                    var_dump($_SERVER["REQUEST_METHOD"]);
                     $apiController->displayMonsters();
                 } else {
                     $apiController->displayMonster($url[1]);
