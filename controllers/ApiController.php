@@ -13,11 +13,16 @@ class ApiController
 
     public function sendJson($data)
     {
-
-        if ($_SERVER["REQUEST_METHOD"] === "GET") {
-            header("Content-Type: application/json; charset=utf-8");
-            http_response_code(200);
-            echo json_encode($data);
+        if (isset($_SERVER["REQUEST_METHOD"])) {
+            header("Access-Control-Allow-Methods: GET");
+            if ($_SERVER["REQUEST_METHOD"] === "GET") {
+                header("Content-Type: application/json; charset=utf-8");
+                http_response_code(200);
+                echo json_encode($data);
+            } else {
+                http_response_code(405);
+                $this->displayErrors(405);
+            }
         } else {
             http_response_code(405);
             $this->displayErrors(405);
@@ -49,10 +54,10 @@ class ApiController
     {
         $monster = $this->apiManager->getMonsterById($id_monster);
 
-        if (empty($monster)) {
+        if (empty($monster) or $monster === null) {
             // Je ne sais pas du tout si j'ai utilisé le bon code http ha ha
-            http_response_code(204);
-            $this->displayErrors(204);
+            http_response_code(404);
+            $this->displayErrors(404);
         } else {
             $monsterJson = [];
 
@@ -71,13 +76,18 @@ class ApiController
 
     public function addScore()
     {
+        if (isset($_SERVER["REQUEST_METHOD"])) {
+            header("Access-Control-Allow-Methods: POST");
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                header("Content-Type: application/json; charset=utf-8");
+                $body = file_get_contents("php://input");
+                $object = json_decode($body, true);
 
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            header("Content-Type: application/json; charset=utf-8");
-            $body = file_get_contents("php://input");
-            $object = json_decode($body, true);
-
-            $this->apiManager->addScoreDB($object["name"], $object["score"]);
+                $this->apiManager->addScoreDB($object["name"], $object["score"]);
+            } else {
+                http_response_code(405);
+                $this->displayErrors(405);
+            }
         } else {
             http_response_code(405);
             $this->displayErrors(405);
@@ -116,7 +126,7 @@ class ApiController
                 echo json_encode(["message" => "Paiement requis"]);
                 break;
             case 404:
-                echo json_encode(["message" => "La page est introuvable :'( :'( :'("]);
+                echo json_encode(["message" => "La page ou le contenu est introuvable :'( :'( :'("]);
                 break;
             case 405:
                 echo json_encode(["message" => "La requête n'est pas autorisée"]);
