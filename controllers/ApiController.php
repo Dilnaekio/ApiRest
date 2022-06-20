@@ -25,8 +25,7 @@ class ApiController
                 $this->displayErrors(405);
             }
         } else {
-            http_response_code(405);
-            $this->displayErrors(405);
+            throw new Exception("Aucune requête trouvée");
         }
     }
 
@@ -34,20 +33,24 @@ class ApiController
     {
         $monsters = $this->apiManager->getMonsters();
 
-        $monsterTab["monsters"] = [];
-        foreach ($monsters as $monster) {
+        if (!empty($monsters)) {
+            $monsterTab["monsters"] = [];
+            foreach ($monsters as $monster) {
 
-            $monstersTab["monsters"][$monster->getId()] = [
-                "monsters_id" => $monster->getId(),
-                "name" => $monster->getName(),
-                "atk" => $monster->getAtk(),
-                "def" => $monster->getDef(),
-                "img" => $monster->getImg(),
-                "score" => $monster->getScore(),
-                "role" => $monster->getRole()
-            ];
+                $monstersTab["monsters"][$monster->getId()] = [
+                    "monsters_id" => $monster->getId(),
+                    "name" => $monster->getName(),
+                    "atk" => $monster->getAtk(),
+                    "def" => $monster->getDef(),
+                    "img" => $monster->getImg(),
+                    "score" => $monster->getScore(),
+                    "role" => $monster->getRole()
+                ];
+            }
+            $this->sendJson($monstersTab);
+        } else {
+            throw new Exception("Aucun monstre stocké en BDD !");
         }
-        $this->sendJson($monstersTab);
     }
 
     public function displayMonster($id_monster)
@@ -139,13 +142,17 @@ class ApiController
                 $body = file_get_contents("php://input");
                 $object = json_decode($body, true);
 
-                $result = $this->apiManager->findUser($object["name"]);
+                if (count($object) === 1 && array_keys($object, "name")) {
+                    $result = $this->apiManager->findUser($object["name"]);
 
-                if (!empty($result)) {
-                    http_response_code(204);
-                    $this->apiManager->deleteScoreDB($result);
+                    if (!empty($result)) {
+                        http_response_code(204);
+                        $this->apiManager->deleteScoreDB($result);
+                    } else {
+                        throw new Exception('Utilisateur non trouvé dans les scores');
+                    }
                 } else {
-                    throw new Exception('Utilisateur non trouvé dans les scores');
+                    throw new Exception("Trop d'éléments dans le json. Il ne doit y avoir que 'name'");
                 }
             } else {
                 http_response_code(405);
