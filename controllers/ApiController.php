@@ -94,6 +94,27 @@ class ApiController
         }
     }
 
+    public function deleteScore()
+    {
+        if (isset($_SERVER["REQUEST_METHOD"])) {
+            header("Access-Controll-Allow-Methods: DELETE");
+            if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
+                header("Content-Type: application/json; charset=utf-8");
+                $body = file_get_contents("php://input");
+                $object = json_decode($body, true);
+
+                $this->apiManager->deleteScoreDB($object["name"]);
+                http_response_code(204);
+            } else {
+                http_response_code(405);
+                $this->displayErrors(405);
+            }
+        } else {
+            http_response_code(405);
+            $this->displayErrors(405);
+        }
+    }
+
     public function displayErrors($code)
     {
         header("Content-Type: application/json; charset=utf-8");

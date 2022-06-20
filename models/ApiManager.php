@@ -50,4 +50,14 @@ class ApiManager extends Model
             ":score" => $score
         ]);
     }
+
+    public function deleteScoreDB($name)
+    {
+        $sql = "DELETE from high_score WHERE name = :name";
+
+        $req = $this->getDB()->prepare($sql);
+        return $req->execute([
+            ":name" => $name
+        ]);
+    }
 }
