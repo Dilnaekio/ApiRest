@@ -128,8 +128,7 @@ class ApiController
                 $this->displayErrors(405);
             }
         } else {
-            http_response_code(405);
-            $this->displayErrors(405);
+            throw new Exception("Aucune requête trouvée !");
         }
     }
 
@@ -157,6 +156,35 @@ class ApiController
             } else {
                 http_response_code(405);
                 $this->displayErrors(405);
+            }
+        } else {
+            throw new Exception("Aucune requête envoyée");
+        }
+    }
+
+    public function modifyNameScore()
+    {
+        if (isset($_SERVER["REQUEST_METHOD"])) {
+            header("Access-Controll-Allow-Methods: PATCH");
+            if ($_SERVER["REQUEST_METHOD"] === "PATCH") {
+                
+                header("Content-Type: application/json; charset=utf-8");
+                $body = file_get_contents("php://input");
+                $object = json_decode($body, true);
+
+                $result = $this->apiManager->modifyNameScoreDB($object["id"], $object["value"]);
+                var_dump($result);
+                exit;
+
+                if ($result) {
+
+                    http_response_code(200);
+                } else {
+                    http_response_code(304);
+                    $this->displayErrors(304);
+                }
+            } else {
+                throw new Exception("Mauvaise requête envoyée ! Il n'y a que du patch ici les frérots");
             }
         } else {
             throw new Exception("Aucune requête envoyée");

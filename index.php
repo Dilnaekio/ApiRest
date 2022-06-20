@@ -35,6 +35,9 @@ try {
             case "delete":
                 $apiController->deleteScore();
                 break;
+            case "modify":
+                $apiController->modifyNameScore();
+                break;
             default:
                 throw new Exception("La page n'existe pas");
         }

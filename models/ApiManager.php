@@ -116,20 +116,27 @@ class ApiManager extends Model
         }
     }
 
-    // public function findUserScoreById($id)
+    // public function modify($table, $id, $col, $value)
     // {
-    //     $sql = "SELECT * from high_score WHERE id = :id";
+    //     $sql = "UPDATE :table SET :col = :value WHERE id = :id";
 
     //     $req = $this->getDB()->prepare($sql);
-    //     $req->execute([
-    //         ":id" => $id
+    //     return $req->execute([
+    //         ":table" => $table,
+    //         ":id" => $id,
+    //         ":col" => $col,
+    //         ":value" => $value
     //     ]);
-
-    //     $user = $req->fetch(PDO::FETCH_OBJ);
-    //     if (!empty($user)) {
-    //         return $user;
-    //     } else {
-    //         return false;
-    //     }
     // }
+
+    public function modifyNameScoreDB($id, $value)
+    {
+        $sql = "UPDATE high_score SET name = :value WHERE id = :id";
+
+        $req = $this->getDB()->prepare($sql);
+        return $req->execute([
+            ":id" => $id,
+            ":value" => $value
+        ]);
+    }
 }
