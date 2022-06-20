@@ -61,7 +61,7 @@ class ApiManager extends Model
         ]);
     }
 
-    public function findUserScore($user)
+    public function findUser($user)
     {
         $sql = "SELECT * from high_score WHERE name = :name";
 
@@ -73,6 +73,23 @@ class ApiManager extends Model
         $user = $req->fetch(PDO::FETCH_OBJ);
         if (!empty($user)) {
             return $user->id;
+        } else {
+            return false;
+        }
+    }
+
+    public function findUserScoreById($id)
+    {
+        $sql = "SELECT * from high_score WHERE id = :id";
+
+        $req = $this->getDB()->prepare($sql);
+        $req->execute([
+            ":id" => $id
+        ]);
+
+        $user = $req->fetch(PDO::FETCH_OBJ);
+        if (!empty($user)) {
+            return $user;
         } else {
             return false;
         }

@@ -27,7 +27,7 @@ try {
                 if (empty($url[1])) {
                     // TODO : méthode pour montrer tous les scores
                 } else {
-                    // TODO : afficher ici le score lié à l'id stockée dans $url[1]
+                    $apiController->displayScore($url[1]);
                 }
                 break;
             case "add":

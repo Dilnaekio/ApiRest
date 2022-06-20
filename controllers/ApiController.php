@@ -54,7 +54,7 @@ class ApiController
     {
         $monster = $this->apiManager->getMonsterById($id_monster);
 
-        if (empty($monster) or $monster === null) {
+        if (empty($monster)) {
             // Je ne sais pas du tout si j'ai utilisé le bon code http ha ha
             http_response_code(404);
             $this->displayErrors(404);
@@ -73,6 +73,25 @@ class ApiController
             $this->sendJson($monsterJson);
         }
     }
+
+    public function displayScore($id_user)
+    {
+        $user = $this->apiManager->findUserScoreById($id_user);
+
+        if (empty($user)) {
+            http_response_code(404);
+            $this->displayErrors(404);
+        } else {
+            $userJson = [];
+
+            $userJson = [
+                "score" => $user->score,
+                "created at" => $user->created_at
+            ];
+            $this->sendJson($userJson);
+        }
+    }
+
 
     public function addScore()
     {
@@ -103,7 +122,7 @@ class ApiController
                 $body = file_get_contents("php://input");
                 $object = json_decode($body, true);
 
-                $result = $this->apiManager->findUserScore($object["name"]);
+                $result = $this->apiManager->findUser($object["name"]);
 
                 if (!empty($result)) {
                     http_response_code(204);
