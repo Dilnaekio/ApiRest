@@ -35,7 +35,7 @@ class ApiManager extends Model
         foreach ($this->monsters as $monster) {
             if ($monster->getId() == $id) {
                 $result = $monster;
-            } 
+            }
         }
         return $result;
     }
@@ -51,13 +51,30 @@ class ApiManager extends Model
         ]);
     }
 
-    public function deleteScoreDB($name)
+    public function deleteScoreDB($id)
     {
-        $sql = "DELETE from high_score WHERE name = :name";
+        $sql = "DELETE from high_score WHERE id = :id";
 
         $req = $this->getDB()->prepare($sql);
-        return $req->execute([
-            ":name" => $name
+        $req->execute([
+            ":id" => $id
         ]);
+    }
+
+    public function findUserScore($user)
+    {
+        $sql = "SELECT * from high_score WHERE name = :name";
+
+        $req = $this->getDB()->prepare($sql);
+        $req->execute([
+            ":name" => $user
+        ]);
+
+        $user = $req->fetch(PDO::FETCH_OBJ);
+        if (!empty($user)) {
+            return $user->id;
+        } else {
+            return false;
+        }
     }
 }

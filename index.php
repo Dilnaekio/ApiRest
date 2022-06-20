@@ -34,7 +34,7 @@ try {
                 $apiController->addScore();
                 break;
             case "delete":
-                $apiController->deleteScore($pseudo);
+                $apiController->deleteScore();
                 break;
             default:
                 throw new Exception("La page n'existe pas");

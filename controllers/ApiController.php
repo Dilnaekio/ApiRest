@@ -103,15 +103,20 @@ class ApiController
                 $body = file_get_contents("php://input");
                 $object = json_decode($body, true);
 
-                $this->apiManager->deleteScoreDB($object["name"]);
-                http_response_code(204);
+                $result = $this->apiManager->findUserScore($object["name"]);
+
+                if (!empty($result)) {
+                    http_response_code(204);
+                    $this->apiManager->deleteScoreDB($result);
+                } else {
+                    throw new Exception('Utilisateur non trouvé dans les scores');
+                }
             } else {
                 http_response_code(405);
                 $this->displayErrors(405);
             }
         } else {
-            http_response_code(405);
-            $this->displayErrors(405);
+            throw new Exception("Aucune requête envoyée");
         }
     }
 
