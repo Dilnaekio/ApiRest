@@ -23,9 +23,8 @@ try {
                 }
                 break;
             case "scores":
-                // TODO : rajouter une condition pour $url[1] via l'id du score
                 if (empty($url[1])) {
-                    // TODO : méthode pour montrer tous les scores
+                    $apiController->displayAllScores();
                 } else {
                     $apiController->displayScore($url[1]);
                 }

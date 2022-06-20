@@ -1,19 +1,31 @@
 <?php
 require_once "models/Model.php";
 require_once "models/MonsterModel.php";
+require_once "models/ScoreModel.php";
 
 class ApiManager extends Model
 {
     private $monsters;
+    private $scores;
 
     public function addMonster($monster)
     {
         $this->monsters[] = $monster;
     }
 
+    public function addScore($score)
+    {
+        $this->scores[] = $score;
+    }
+
     public function getMonsters()
     {
         return $this->monsters;
+    }
+
+    public function getScores()
+    {
+        return $this->scores;
     }
 
     public function loadingMonsters()
@@ -30,11 +42,37 @@ class ApiManager extends Model
         }
     }
 
+    public function loadingScores()
+    {
+        $sql = "SELECT * from high_score";
+        $req = $this->getDB()->prepare($sql);
+        $req->execute();
+
+        $scores = $req->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($scores as $score) {
+            $add = new Score($score->id, $score->name, $score->score, $score->created_at);
+            $this->addScore($add);
+        }
+
+        return $req->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function getMonsterById($id)
     {
         foreach ($this->monsters as $monster) {
             if ($monster->getId() == $id) {
                 $result = $monster;
+            }
+        }
+        return $result;
+    }
+
+    public function getScorerById($id)
+    {
+        foreach ($this->scores as $score) {
+            if ($score->getId() == $id) {
+                $result = $score;
             }
         }
         return $result;
@@ -78,20 +116,20 @@ class ApiManager extends Model
         }
     }
 
-    public function findUserScoreById($id)
-    {
-        $sql = "SELECT * from high_score WHERE id = :id";
+    // public function findUserScoreById($id)
+    // {
+    //     $sql = "SELECT * from high_score WHERE id = :id";
 
-        $req = $this->getDB()->prepare($sql);
-        $req->execute([
-            ":id" => $id
-        ]);
+    //     $req = $this->getDB()->prepare($sql);
+    //     $req->execute([
+    //         ":id" => $id
+    //     ]);
 
-        $user = $req->fetch(PDO::FETCH_OBJ);
-        if (!empty($user)) {
-            return $user;
-        } else {
-            return false;
-        }
-    }
+    //     $user = $req->fetch(PDO::FETCH_OBJ);
+    //     if (!empty($user)) {
+    //         return $user;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 }

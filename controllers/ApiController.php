@@ -9,6 +9,7 @@ class ApiController
     {
         $this->apiManager = new ApiManager;
         $this->apiManager->loadingMonsters();
+        $this->apiManager->loadingScores();
     }
 
     public function sendJson($data)
@@ -46,7 +47,6 @@ class ApiController
                 "role" => $monster->getRole()
             ];
         }
-
         $this->sendJson($monstersTab);
     }
 
@@ -76,7 +76,7 @@ class ApiController
 
     public function displayScore($id_user)
     {
-        $user = $this->apiManager->findUserScoreById($id_user);
+        $user = $this->apiManager->getScorerById($id_user);
 
         if (empty($user)) {
             http_response_code(404);
@@ -85,11 +85,28 @@ class ApiController
             $userJson = [];
 
             $userJson = [
-                "score" => $user->score,
-                "created at" => $user->created_at
+                "name" => $user->getName(),
+                "score" => $user->getScore(),
+                "created at" => $user->getCreatedAt()
             ];
             $this->sendJson($userJson);
         }
+    }
+
+    public function displayAllScores()
+    {
+        $scores = $this->apiManager->getScores();
+
+        $scoresTab["scoress"] = [];
+        foreach ($scores as $score) {
+
+            $scoresTab["scoress"][$score->getId()] = [
+                "User" => $score->getName(),
+                "Score" => $score->getScore(),
+                "Created at" => $score->getCreatedAt()
+            ];
+        }
+        $this->sendJson($scoresTab);
     }
 
 
